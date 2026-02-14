@@ -33,16 +33,21 @@ app.get('/', (req, res) => {
 app.post('/webhook', async (req, res) => {
   try {
     console.log('📥 Received webhook from Twilio:', JSON.stringify(req.body, null, 2));
+    console.log('📋 All body keys:', Object.keys(req.body));
+    console.log('📝 Body value:', req.body.Body);
+    console.log('📝 body value:', req.body.body);
 
     // Quick 200 response to Twilio
     res.sendStatus(200);
 
-    const messageBody = req.body.Body;
+    const messageBody = req.body.Body || req.body.body;
     const from = req.body.From; // Format: whatsapp:+972501234567
     const to = req.body.To; // Format: whatsapp:+14155238886
     
+    console.log('🔍 Extracted - Body:', messageBody, 'From:', from, 'To:', to);
+    
     if (!messageBody) {
-      console.log('No message body');
+      console.log('❌ No message body found in:', Object.keys(req.body));
       return;
     }
 
